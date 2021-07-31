@@ -1,16 +1,14 @@
 import React from 'react';
 import { Button, ButtonGroup, Card, Image } from 'semantic-ui-react';
-import { Activity } from '../../../models/activity';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
+import { useStore } from '../../../app/stores/store';
 
-interface Props {
-    activity: Activity;
-    cancelSelect: () => void;
-    openForm: (id: string) => void;
-    deleteActivity: (id: string) => void;
-    submitting: boolean
-}
+export default function ActivityDetails(){
+    const {activityStore} = useStore();
+    const {selectedActivity: activity, openForm, cancelSelectActivity, submitting} = activityStore;
 
-export default function ActivityDetails({activity, cancelSelect, openForm, deleteActivity, submitting}: Props){
+    if(!activity) return <LoadingComponent content="Loading App"/>;
+
     return(
         <Card fluid>
             <Image src={`/assets/categoryImages/${activity.category}.jpg`} />
@@ -26,8 +24,8 @@ export default function ActivityDetails({activity, cancelSelect, openForm, delet
             <Card.Content extra>
                 <ButtonGroup width='2'>
                     <Button onClick={() => openForm(activity.id)} basic color='blue' content='Edit' />
-                    <Button onClick={cancelSelect} basic color='grey' content='Cancel' />
-                    <Button onClick={() => deleteActivity(activity.id)} color='red' content='Delete' float="right" loading={submitting} />
+                    <Button onClick={cancelSelectActivity} basic color='grey' content='Cancel' />
+                    <Button color='red' content='Delete' float="right" loading={submitting} />
                     
                 </ButtonGroup>
             </Card.Content>
